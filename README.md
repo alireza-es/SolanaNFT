@@ -1,6 +1,7 @@
 # SolanaNFT
 A simple NFT Built on Solana network
-Implemented scenario:
+
+# Implemented scenario
 1. Connect to the cluster
 2. Create the source wallet
 3. Request AirDrop to the source wallet
