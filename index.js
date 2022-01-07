@@ -69,4 +69,17 @@ const splToken = require('@solana/spl-token');
       1,
     )
   );
+
+  // Sign the transaction, broadcast it to the cluster and confirm it
+  const signature = await web3.sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [fromWallet],
+    {
+      commitment: 'confirmed',
+    }
+  )
+
+  console.log(signature, signature);
+  
 })
