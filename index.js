@@ -11,11 +11,13 @@ const splToken = require('@solana/spl-token');
 
   // Generate the source wallet
   const fromWallet = web3.Keypair.generate();
+  console.log(`Generated source wallet: ${fromWallet.publicKey}`);
+
   const fromAirDropSignature = await connection.requestAirdrop(
     fromWallet.publicKey,
     web3.LAMPORTS_PER_SOL
   );
-  console.log('Generated source wallet');
+  console.log("Requested airdrop");
 
   // Wait for airdrop to be confirmed
   await connection.confirmTransaction(fromAirDropSignature);
@@ -40,7 +42,7 @@ const splToken = require('@solana/spl-token');
 
   // Generate a new wallet to receive newly minted tokens
   const toWallet = web3.Keypair.generate();
-  console.log('Generated destination wallet');
+  console.log(`Generated destination wallet: ${toWallet.publicKey}`);
 
   // Get the token account of the toWallet Solana address, if it doesn't exist, create it
   const toTokenAccount = await mint.getOrCreateAssociatedAccountInfo(
