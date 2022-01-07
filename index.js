@@ -7,6 +7,7 @@ const splToken = require('@solana/spl-token');
     web3.clusterApiUrl("devnet"),
     "confirmed"
   );
+  console.log('Connected to cluster');
 
   // Generate the source wallet
   const fromWallet = web3.Keypair.generate();
@@ -14,9 +15,11 @@ const splToken = require('@solana/spl-token');
     fromWallet.publicKey,
     web3.LAMPORTS_PER_SOL
   );
+  console.log('Generated source wallet');
 
   // Wait for airdrop to be confirmed
   await connection.confirmTransaction(fromAirDropSignature);
+  console.log('Airdrop confirmed');
 
   // Create a new token mint
   const mint = await splToken.Token.createMint(
@@ -27,19 +30,23 @@ const splToken = require('@solana/spl-token');
     9,
     splToken.TOKEN_PROGRAM_ID
   );
+  console.log('Created new token mint');
 
   // Get the token Account of the fromWallet Solana address, if it doesn't exist, create it
   const fromTokenAccount = await mint.getOrCreateAssociatedAccountInfo(
     fromWallet.publicKey
   );
+  console.log('Got or created the token account of the source wallet');
 
   // Generate a new wallet to receive newly minted tokens
   const toWallet = web3.Keypair.generate();
+  console.log('Generated destination wallet');
 
   // Get the token account of the toWallet Solana address, if it doesn't exist, create it
   const toTokenAccount = await mint.getOrCreateAssociatedAccountInfo(
     toWallet.publicKey
   );
+  console.log('Got or created the token account of the destination wallet');
 
   // Mint 1 new token to the fromTokenAccount we just returned or created
   await mint.mintTo(
@@ -48,6 +55,7 @@ const splToken = require('@solana/spl-token');
     [], // Multisig signers
     1000000000 // Amount of tokens to mint
   );
+  console.log('Minted 1 token to the source wallet');
 
   // Set Authority to the toWallet Solana address
   await mint.setAuthority(
@@ -57,6 +65,7 @@ const splToken = require('@solana/spl-token');
     fromWallet.publicKey,
     []
   );
+  console.log('Set authority to the destination wallet');
 
   // Add token transfer instructions to transaction
   const transaction = new web3.Transaction().add(
@@ -69,6 +78,7 @@ const splToken = require('@solana/spl-token');
       1,
     )
   );
+  console.log('Added token transfer instruction');
 
   // Sign the transaction, broadcast it to the cluster and confirm it
   const signature = await web3.sendAndConfirmTransaction(
@@ -79,7 +89,8 @@ const splToken = require('@solana/spl-token');
       commitment: 'confirmed',
     }
   )
+  console.log('Signed and confirmed transaction');
 
   console.log(signature, signature);
-  
-})
+
+})();
